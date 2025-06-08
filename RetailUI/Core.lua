@@ -6,6 +6,10 @@
 local RUI = LibStub('AceAddon-3.0'):NewAddon('RetailUI', 'AceConsole-3.0')
 local AceConfig = LibStub("AceConfig-3.0")
 local AceDB = LibStub("AceDB-3.0")
+RetailUIDB = RetailUIDB or {}
+if RetailUIDB.bagsExpanded == nil then
+    RetailUIDB.bagsExpanded = false -- Standard: sichtbar
+end
 
 RUI.InterfaceVersion = select(4, GetBuildInfo())
 RUI.Wrath = (RUI.InterfaceVersion >= 30300)
