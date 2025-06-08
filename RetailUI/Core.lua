@@ -16,7 +16,12 @@ function RUI:OnInitialize()
 	AceConfig:RegisterOptionsTable("RUI Commands", RUI.optionsSlash, "rui")
 end
 
-function RUI:OnEnable() end
+function RUI:OnEnable()
+    if GetCVar("useUiScale") == "0" then
+        SetCVar("useUiScale", 1)
+        SetCVar("uiScale", 0.75)
+    end
+end
 
 function RUI:OnDisable() end
 
@@ -126,3 +131,23 @@ function CheckSettingsExists(self, widgets)
 	end
 	self:UpdateWidgets()
 end
+
+local function MoveChatOnFirstLoad()
+    local chat = ChatFrame1
+    if not chat then return end
+
+    if chat:IsUserPlaced() then return end
+
+    chat:ClearAllPoints()
+    chat:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 32, 32)
+    chat:SetWidth(chat:GetWidth() - 40)
+    chat:SetMovable(true)
+    chat:SetUserPlaced(true)
+end
+
+local f = CreateFrame("Frame")
+f:RegisterEvent("PLAYER_ENTERING_WORLD")
+f:SetScript("OnEvent", function(self, event)
+    MoveChatOnFirstLoad()
+    self:UnregisterEvent("PLAYER_ENTERING_WORLD")
+end)
