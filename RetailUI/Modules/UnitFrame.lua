@@ -1053,6 +1053,33 @@ function Module:PLAYER_ENTERING_WORLD()
     }
 
     CheckSettingsExists(Module, widgets)
+
+    for i = 1, 4 do
+        local frame = _G["PartyMemberFrame" .. i]
+        if frame and frame.healthbar then
+            self:HookScript(frame.healthbar, "OnValueChanged", function(self)
+                local unit = frame.unit
+                if UnitIsPlayer(unit) and not UnitIsUnit(unit, "player") then
+                    local _, class = UnitClass(unit)
+                    local color = RAID_CLASS_COLORS[class]
+                    if color then
+                        self:SetStatusBarColor(color.r, color.g, color.b)
+                    end
+                end
+            end)
+
+            self:SecureHook(frame.healthbar, "SetStatusBarColor", function(bar, r, g, b)
+                local unit = frame.unit
+                if UnitIsPlayer(unit) and not UnitIsUnit(unit, "player") then
+                    local _, class = UnitClass(unit)
+                    local color = RAID_CLASS_COLORS[class]
+                    if color and (r ~= color.r or g ~= color.g or b ~= color.b) then
+                        bar:SetStatusBarColor(color.r, color.g, color.b)
+                    end
+                end
+            end)
+        end
+    end
 end
 
 function Module:LoadDefaultSettings()
